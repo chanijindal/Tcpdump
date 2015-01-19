@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Tcpdump</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="protego_settings">
+        <item>"set rules"</item>
+        <item>"apply filtering"</item>
+        <item>"settings"</item>
+    </string-array>
+
+</resources>
