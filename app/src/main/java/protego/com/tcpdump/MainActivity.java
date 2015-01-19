@@ -28,6 +28,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
     String m_chosenDir = "";
     boolean m_newFolderEnabled = true;
     int button_running =0;
+    int chosen_dir_changed =0;
 
 
     @Override
@@ -64,6 +65,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
             case R.id.select_dir:
                 showDirectoryDialog();
                 //tcpdump.append("/data/data/protego.com.tcpdump/files/tcpdump -nvv >"+m_chosenDir+"/tcpdump.pcap");
+                chosen_dir_changed=1;
                 Log.e("directory", m_chosenDir );
                 break;
 
@@ -105,10 +107,16 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
 
     public  void startTCPdump()
     {
-        if(button_running==0) {
-
-            tcpdump.append("/data/data/protego.com.tcpdump/files/tcpdump -nvv >"+m_chosenDir+"/tcpdump.pcap");
-
+        if(button_running==0  || chosen_dir_changed==1) {
+             if(m_chosenDir.isEmpty()) {
+                 tcpdump.setLength(0);
+                 tcpdump.append("/data/data/protego.com.tcpdump/files/tcpdump -nvv >mnt/sdcard/tcpdump.pcap");
+                 Toast.makeText(this,"No directory chosen ..File stored in sdcard",Toast.LENGTH_SHORT).show();
+             }
+            else {
+                 tcpdump.setLength(0);
+                 tcpdump.append("/data/data/protego.com.tcpdump/files/tcpdump -nvv >" + m_chosenDir + "/tcpdump.pcap");
+             }
             if (RootAccess.runAsRootUser(tcpdump.toString(), result, 1000) == 0) {
 
                 showAlert(this, "Result:" + result.toString());
@@ -119,6 +127,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
             }
 
             button_running=1;
+            chosen_dir_changed=0;
         }
         else
         {
