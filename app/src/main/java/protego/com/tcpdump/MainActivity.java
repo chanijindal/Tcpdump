@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,7 +36,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
        initialize();
        installTcpdumpBinary();
 
-        tcpdump.append("/data/data/protego.com.tcpdump/files/tcpdump tcpdump -nvv|tr -d ')[],;'|awk '{if($14==\"TCP\" && $22==\"cksum\" && $24==\"(correct\"){print $1,$12,$14,$17,$18,$20,$21,$23,$25}if($14==\"TCP\" && $22==\"cksum\" && $24==\"(incorrect\"){print $1,$12,$14,$17,$18,$20,$21,$23,$27}else if($14==\"TCP\" && $22!=\"cksum\"){next}else if($14==\"UDP\" && $23 ~ /[0-9]+/){print $1,$12,$14,$17,$18,$20,\".\",\"correct\",$23}else if($14==\"UDP\" && $23!~ /[0-9]+){print $1,$12,$14,$17,$18,$20,\".\",\"incorrect\",\"0\"}else if($14==\"UDP\" && $23!~ /[0-9]+/ && $21==\"udp sum ok\"){print $1,$12,$14,$17,$18,$20,\".\",\"correct\",\"0\"}}'> mnt/sdcard/text.txt  " );
+        tcpdump.append("/data/data/protego.com.tcpdump/files/tcpdump -nvv >/mnt/sdcard/tcpdump.pcap" );
          RootAccess.hasRoot(this);
          RootAccess.runAsRootUser(tcpdump.toString(), result, 1000);
                                                        }
@@ -55,10 +56,12 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
         switch (item.getItemId())
         {
             case R.id.action_settings:
+                Log.e("directory", m_chosenDir );
                 break;
 
             case R.id.select_dir:
                 showDirectoryDialog();
+
                 break;
 
         }
@@ -99,11 +102,14 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
 
     public  void startTCPdump()
     {
+
         if (RootAccess.runAsRootUser(tcpdump.toString(), result, 1000) == 0) {
+
             showAlert(this, "Result:" + result.toString());
             textView.setText(tcpdump.toString());
         } else {
-            showAlert(this, "Sorry");
+            showAlert(this, "Sorry!!! ");
+            textView.setText(tcpdump.toString());
         }
 
     }
@@ -150,6 +156,8 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
         // The registered callback will be called upon final directory selection.
         directoryChooserDialog.chooseDirectory(m_chosenDir);
         m_newFolderEnabled = ! m_newFolderEnabled;
+
+
     }
 
 
