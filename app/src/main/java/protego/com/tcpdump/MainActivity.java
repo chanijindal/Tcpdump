@@ -27,6 +27,8 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
     ActionBar actionBar;
     String m_chosenDir = "";
     boolean m_newFolderEnabled = true;
+    int button_running =0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
        initialize();
        installTcpdumpBinary();
 
-        tcpdump.append("/data/data/protego.com.tcpdump/files/tcpdump -nvv >/mnt/sdcard/tcpdump.pcap" );
+        //tcpdump.append("/data/data/protego.com.tcpdump/files/tcpdump -nvv >"+m_chosenDir+"/tcpdump.pcap");
          RootAccess.hasRoot(this);
          RootAccess.runAsRootUser(tcpdump.toString(), result, 1000);
                                                        }
@@ -61,7 +63,8 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
 
             case R.id.select_dir:
                 showDirectoryDialog();
-
+                //tcpdump.append("/data/data/protego.com.tcpdump/files/tcpdump -nvv >"+m_chosenDir+"/tcpdump.pcap");
+                Log.e("directory", m_chosenDir );
                 break;
 
         }
@@ -102,14 +105,31 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
 
     public  void startTCPdump()
     {
+        if(button_running==0) {
 
-        if (RootAccess.runAsRootUser(tcpdump.toString(), result, 1000) == 0) {
+            tcpdump.append("/data/data/protego.com.tcpdump/files/tcpdump -nvv >"+m_chosenDir+"/tcpdump.pcap");
 
-            showAlert(this, "Result:" + result.toString());
-            textView.setText(tcpdump.toString());
-        } else {
-            showAlert(this, "Sorry!!! ");
-            textView.setText(tcpdump.toString());
+            if (RootAccess.runAsRootUser(tcpdump.toString(), result, 1000) == 0) {
+
+                showAlert(this, "Result:" + result.toString());
+                textView.setText(tcpdump.toString());
+            } else {
+                showAlert(this, "Sorry!!! ");
+                textView.setText(tcpdump.toString());
+            }
+
+            button_running=1;
+        }
+        else
+        {
+            if (RootAccess.runAsRootUser(tcpdump.toString(), result, 1000) == 0) {
+
+                showAlert(this, "Result:" + result.toString());
+                textView.setText(tcpdump.toString());
+            } else {
+                showAlert(this, "Sorry!!! ");
+                textView.setText(tcpdump.toString());
+            }
         }
 
     }
