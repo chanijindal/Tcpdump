@@ -29,6 +29,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
     boolean m_newFolderEnabled = true;
     int button_running =0;
     int chosen_dir_changed =0;
+    RootMethods rootMethods ;
 
 
     @Override
@@ -40,8 +41,12 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
        installTcpdumpBinary();
 
         //tcpdump.append("/data/data/protego.com.tcpdump/files/tcpdump -nvv >"+m_chosenDir+"/tcpdump.pcap");
-         RootAccess.hasRoot(this);
-         RootAccess.runAsRootUser(tcpdump.toString(), result, 1000);
+        // RootAccess.hasRoot(this);
+         //RootAccess.runAsRootUser(tcpdump.toString(), result, 1000);
+        Root.RootStatusDisplay();
+        if(Root.checkRootAccess)
+            Toast.makeText(this,"Root Granted",Toast.LENGTH_LONG).show();
+
                                                        }
 
 
@@ -87,6 +92,8 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
         stopButton= (Button) findViewById(R.id.stopButton);
         stopButton.setOnClickListener(this);
         startButton.setOnClickListener(this);
+        rootMethods= new RootMethods();
+        RootRunnable rootRunnable = new RootRunnable(this,result,rootMethods);
 
 
     }
@@ -107,6 +114,8 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
 
     public  void startTCPdump()
     {
+
+       // RootAccess.scriptStarted=true;
         if(button_running==0  || chosen_dir_changed==1) {
              if(m_chosenDir.isEmpty()) {
                  tcpdump.setLength(0);
@@ -117,7 +126,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
                  tcpdump.setLength(0);
                  tcpdump.append("/data/data/protego.com.tcpdump/files/tcpdump -nvv >" + m_chosenDir + "/tcpdump.pcap");
              }
-            if (RootAccess.runAsRootUser(tcpdump.toString(), result, 1000) == 0) {
+            if (RootRunnable.start(tcpdump.toString())==0){//RootAccess.runAsRootUser(tcpdump.toString(), result, 1000) == 0) {
 
                 showAlert(this, "Result:" + result.toString());
                 textView.setText(tcpdump.toString());
@@ -131,7 +140,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
         }
         else
         {
-            if (RootAccess.runAsRootUser(tcpdump.toString(), result, 1000) == 0) {
+            if (RootRunnable.start(tcpdump.toString())==0/*RootAccess.runAsRootUser(tcpdump.toString(), result, 1000) == 0*/) {
 
                 showAlert(this, "Result:" + result.toString());
                 textView.setText(tcpdump.toString());
@@ -145,8 +154,11 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
 
     public void stopTCPdump()
     {
-        RootAccess.runAsRootUser("killall tcpdump",result,1000);
-        showAlert(this,result.toString());
+
+        RootRunnable.stop();
+        //RootAccess.scriptStarted=false;
+        //RootAccess.runAsRootUser("killall tcpdump",result,1000);
+        showAlert(this, result.toString());
 
     }
 

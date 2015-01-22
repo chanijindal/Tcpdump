@@ -6,12 +6,15 @@ package protego.com.tcpdump;
 import android.app.AlertDialog;
 import android.content.Context;
 
+import java.io.IOException;
+
 /**
  * Created by chanijindal on 23/12/14.
  */
 public class RootAccess{
 
     public static boolean hasRoot= false;
+    public static boolean scriptStarted =false;
 
 
 
@@ -53,30 +56,45 @@ public class RootAccess{
 
     }
 
-    public static int runAsRootUser(String script,StringBuilder result,long timeout)
-    {
-        ScriptRunner runner =new ScriptRunner(script,result);
-        runner.start();
+    public static int runAsRootUser(String script,StringBuilder result,long timeout) {
 
-        try {
-            if(timeout>0)
-                runner.join(timeout);
-            else
-                runner.join();
-            if(runner.isAlive())
-                runner.interrupt();
-            // runner.destroy();
-            runner.join(50);
+        ScriptRunner runner = new ScriptRunner(script, result);
 
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
+        if (scriptStarted) {
+
+            runner.start();
+
+            try {
+                if (timeout > 0)
+                    runner.join(timeout);
+                else
+                    runner.join();
+                if (runner.isAlive())
+
+                    runner.interrupt();
+                // runner.destroy();
+                runner.join(50);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return runner.exitValue;
+            }
             return runner.exitValue;
         }
-        return runner.exitValue;
+
+        else
+        {
+            try {
+                Runtime.getRuntime().exec("killall tcpdump");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return 0;
+
+
     }
-
-
 
 }
 

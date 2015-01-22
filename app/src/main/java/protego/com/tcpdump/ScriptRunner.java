@@ -13,6 +13,7 @@ public class ScriptRunner extends Thread{
     private StringBuilder result;
     private Process process;
     public int exitValue;
+    boolean EndScript=false;
 
     public ScriptRunner(String script,StringBuilder result)
     {
@@ -51,6 +52,7 @@ public class ScriptRunner extends Thread{
             }
             if (result!=null) {
                 this.exitValue = process.waitFor();
+
             }
 
         } catch (IOException e) {
