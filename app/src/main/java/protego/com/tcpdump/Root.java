@@ -21,7 +21,7 @@ public class Root  {
    public static StringBuilder script = new StringBuilder();
    public static StringBuilder result=new StringBuilder();
 
-    public static boolean processRunning;
+
     /*public Root(String script ,String result)
     {
         this.script=script;
@@ -38,7 +38,7 @@ public class Root  {
 
     public static boolean checkRoot()
     {
-         Process proc = null;
+         Process proc ;
         try {
             proc=Runtime.getRuntime().exec("su");
             dataOutputStream=new DataOutputStream(proc.getOutputStream());
@@ -67,41 +67,53 @@ public class Root  {
 
     public static int startShell()
     {
-       if(checkRootAccess)
-        try {
-            process= Runtime.getRuntime().exec("su");
-            dataOutputStream=new DataOutputStream(process.getOutputStream());
-            dataInputStream = new DataInputStream(process.getInputStream());
-             return  0;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return -1;
-        }
-          return -1;
-    }
-
-    public static void stopShell()
-    {
-
-        if(checkRootAccess)
-        {
-            if(process!=null)
-            {
+        if(process==null) {
+            if (checkRootAccess)
                 try {
-                   dataOutputStream.writeBytes("exit\n");
-                    process.wait();
-                    process.destroy();
-                    process=null;
-                    dataOutputStream=null;
-                    dataInputStream=null;
+                    process = Runtime.getRuntime().exec("su");
+                    dataOutputStream = new DataOutputStream(process.getOutputStream());
+                    dataInputStream = new DataInputStream(process.getInputStream());
+                    return 0;
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return -1;
+                }
+            return -1;
+
+        }
+        return -1;
+    }
+
+    public static int stopShell()
+    {
+
+
+        if(process!=null) {
+            if (checkRootAccess) {
+
+                try {
+                    dataOutputStream.writeBytes("exit\n");
+                    process.waitFor();
+                    process.destroy();
+                    process = null;
+                    dataOutputStream = null;
+                    dataInputStream = null;
+                    return 0;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return -1;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    return -2;
                 }
-            }
-        }
 
+
+            }
+
+
+            return -3;
+        }
+        return -4;
     }
 
 

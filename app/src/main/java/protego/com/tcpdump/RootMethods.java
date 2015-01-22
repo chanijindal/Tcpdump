@@ -9,6 +9,11 @@ public class RootMethods extends Root {
         super();
     }
 
+    public RootMethods(String script){
+
+        start(script);
+    }
+
 
     protected void finalize()
     {
@@ -20,10 +25,9 @@ public class RootMethods extends Root {
 
     public static int stop()
     {
-        if(runScript("killall tcpdump")==0)
-        return 0;
-        else
-            return -1;
+        if(runScript("killall tcpdump")!=0)
+        return -5;
+        return stopShell();
     }
 
 

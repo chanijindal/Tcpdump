@@ -12,6 +12,17 @@
         android:textColorHighlight="#fffbff20"
         android:focusable="true" />
 
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editTextView"
+        android:textColor="#ff0a1973"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="91dp" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
