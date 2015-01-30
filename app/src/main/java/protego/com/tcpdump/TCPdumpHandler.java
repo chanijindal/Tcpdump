@@ -16,17 +16,19 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class TCPdumpHandler {
 
 
     private static final int defaultRefreshRate = 100;
-    private static final int defaultBufferSize = 4096;
+    private static final int defaultBufferSize = 77;
 
     // Your Main activity's ids for the View.
 
@@ -55,7 +57,9 @@ public class TCPdumpHandler {
     private View scroller = null;
     private ProgressBar pbar = null;
     private EditText params = null;
-
+    boolean textSet= false;
+    String checkBufferValue;
+StringBuilder result = new StringBuilder();
     /**
      * This runnable is used for refreshing the TCPdump's process standard
      * output.
@@ -77,9 +81,14 @@ public class TCPdumpHandler {
                     if (outputText.length() + buffer.length >= bufferSize)
                         outputText.setText("");
 
-                    outputText.append(new String(buffer));
+                        outputText.append(new String(buffer));
+                        checkBufferValue= new String(buffer);
+                    Log.e("LOG ",checkBufferValue);
 
-                    // Forces the scrollbar to be at the bottom.
+
+                    result.append(new String(buffer));
+
+
 
                 }
             } catch (IOException e) {
@@ -91,7 +100,7 @@ public class TCPdumpHandler {
     };
 
     public TCPdumpHandler(TCPdump tcpdump, Context mContext, Activity activity,
-                          boolean notificationEnabled) {
+                          StringBuilder result) {
 
 
         this.tcpdump = tcpdump;
@@ -103,6 +112,7 @@ public class TCPdumpHandler {
 
         this.mContext = mContext;
 
+        this.result=result;
 
     }
 

@@ -60,7 +60,7 @@ public class RootAccess{
 
         ScriptRunner runner = new ScriptRunner(script, result);
 
-        if (scriptStarted) {
+
 
             runner.start();
 
@@ -80,18 +80,7 @@ public class RootAccess{
                 return runner.exitValue;
             }
             return runner.exitValue;
-        }
 
-        else
-        {
-            try {
-                Runtime.getRuntime().exec("killall tcpdump");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return 0;
 
 
     }

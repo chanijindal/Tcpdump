@@ -34,8 +34,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
     boolean m_newFolderEnabled = true;
     int button_running =0;
     int chosen_dir_changed =0;
-    RootMethods rootMethods ;
-    RootRunnable rootRunnable;
+    //StringBuilder tcpdump= new StringBuilder();
     TCPdump tcpdump;
     TCPdumpHandler tcpDumpHandler;
 
@@ -46,17 +45,16 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
 
        initialize();
        installTcpdumpBinary();
-        parameters.setText("-nvv>/mnt/sdcard/chani.pcap");
-
+        parameters.setText("-nvv|tr -d ')[],:'|awk '{if($14==\"TCP\" && $22==\"cksum\" && $24==\"(correct\"){printf \"%s %s %s %4s %20s %20s %s %s %3s\\n\",$1, substr($12,0,2),$14,$17,$18,$20,$21,substr($24,index($24,\"(\")+1,2),substr($25,index($25,\"(\")+1,2)}else if($14==\"TCP\" && $22==\"cksum\" && $24==\"(incorrect\"){printf \"%s %s %s %4s %20s %20s %s %s %3s\\n\",$1, substr($12,0,2),$14,$17,$18,$20,$21,substr($24,index($24,\"(\")+1,2),substr($27,index($27,\"(\")+1,2)}else if($14==\"TCP\" && $22!=\"cksum\"){next}else if($14==\"UDP\" && $23 ~ /[0-9]+/){printf \"%s %s %s %4s %20s %20s %s %s %3s\\n\",$1, substr($12,0,2),$14,$17,$18,$20,\".\",\"co\",$23}else if($14==\"UDP\" && $23!~ /[0-9]+/){printf \"%s %s %s %4s %20s %20s %s %s %3s\\n\",$1, substr($12,0,2),$14,$17,$18,$20,\".\",\"in\",\"0\"}else if($14==\"UDP\" && $23!~ /[0-9]+/ && $21==\"udp sum ok\"){printf \"%s %s %s %4s %20s %20s %s %s %3s\\n\",$1, substr($12,0,2),$14,$17,$18,$20,\".\",\"co\",\"0\"}}'");
         //tcpdump.append("/data/data/protego.com.tcpdump/files/tcpdump -nvv >"+m_chosenDir+"/tcpdump.pcap");
-        // RootAccess.hasRoot(this);
-         //RootAccess.runAsRootUser(tcpdump.toString(), result, 1000);
+        //RootAccess.hasRoot(this);
+        //RootAccess.runAsRootUser(tcpdump.toString(), result, 1000);
 
 
         tcpdump = new TCPdump();
 
         // Creating a TCPdump handler for the TCPdump object created after.
-        tcpDumpHandler = new TCPdumpHandler(tcpdump, this, this, true);
+        tcpDumpHandler = new TCPdumpHandler(tcpdump, this, this,result);
 
 
     }
@@ -104,8 +102,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
         stopButton= (Button) findViewById(R.id.stopButton);
         stopButton.setOnClickListener(this);
         startButton.setOnClickListener(this);
-        rootMethods= new RootMethods();
-         rootRunnable = new RootRunnable(this,this,rootMethods);
+
         parameters = (EditText) findViewById(R.id.editTextView);
 
     }
@@ -130,7 +127,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
        // RootAccess.scriptStarted=true;
         if(button_running==0  || chosen_dir_changed==1) {
              if(m_chosenDir.isEmpty()) {
-                // tcpdump.setLength(0);
+                //tcpdump.setLength(0);
                  //tcpdump.append("/data/data/protego.com.tcpdump/files/tcpdump -nvv >mnt/sdcard/tcpdump.pcap");
                  Toast.makeText(this,"No directory chosen ..File stored in sdcard",Toast.LENGTH_SHORT).show();
              }
@@ -138,7 +135,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
                  //tcpdump.setLength(0);
                  //tcpdump.append("/data/data/protego.com.tcpdump/files/tcpdump -nvv >" + m_chosenDir + "/tcpdump.pcap");
              }
-            if (rootRunnable.start(tcpdump.toString())==0){//RootAccess.runAsRootUser(tcpdump.toString(), result, 1000) == 0) {
+            if (RootAccess.runAsRootUser(tcpdump.toString(), result, 1000) == 0) {
 
                 showAlert(this, "Result:" + result.toString());
                 textView.setText(tcpdump.toString());
@@ -152,7 +149,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
         }
         else
         {
-            if (rootRunnable.start(tcpdump.toString())==0/*RootAccess.runAsRootUser(tcpdump.toString(), result, 1000) == 0*/) {
+            if (RootAccess.runAsRootUser(tcpdump.toString(), result, 1000) == 0) {
 
                 showAlert(this, "Result:" + result.toString());
                 textView.setText(tcpdump.toString());
@@ -168,7 +165,7 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
     {
         //rootMethods.stop();
 
-        switch(rootRunnable.stop())
+       /*switch(rootRunnable.stop())
         {
             case 0: showAlert(this, "Everything is fine");
                 break;
@@ -186,11 +183,11 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
             case -6:
                 showAlert(this,"problem in rootRunnable stop");
                 break;
-        }
+        }*/
 
 
-        //RootAccess.scriptStarted=false;
-        //RootAccess.runAsRootUser("killall tcpdump",result,1000);
+        RootAccess.scriptStarted=false;
+        RootAccess.runAsRootUser("killall tcpdump",result,1000);
         showAlert(this, result.toString());
 
     }
@@ -245,6 +242,9 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
                 case 0:
                     Toast.makeText(MainActivity.this, "tcpdump started",
                             Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder alert= new AlertDialog.Builder(this);
+                    alert.setMessage(result.toString());
+                    alert.show();
                     break;
                 case -1:
                     Toast.makeText(MainActivity.this,
@@ -298,6 +298,10 @@ public class MainActivity extends ActionBarActivity implements OnClickListener{
             case 0:
                 Toast.makeText(MainActivity.this,"tcpdump stopped",
                         Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder alert= new AlertDialog.Builder(this);
+                alert.setMessage(result.toString());
+                alert.show();
+
                 break;
             case -1:
                 Toast.makeText(MainActivity.this,"tcpdump already stopped",
