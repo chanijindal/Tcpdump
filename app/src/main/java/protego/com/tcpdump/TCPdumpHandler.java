@@ -5,6 +5,7 @@ package protego.com.tcpdump;
  */
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -83,8 +84,7 @@ StringBuilder result = new StringBuilder();
 
                         outputText.append(new String(buffer));
                         checkBufferValue= new String(buffer);
-                    Log.e("LOG ",checkBufferValue);
-
+                        CreateHashObject.createObject(checkBufferValue);
 
                     result.append(new String(buffer));
 

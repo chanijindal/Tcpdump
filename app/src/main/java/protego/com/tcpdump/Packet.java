@@ -6,22 +6,25 @@ package protego.com.tcpdump;
 public class Packet {
 
 
-    long TIMESTAMP;
+    public static String TIMESTAMP;
 
-    String SRC_IP;
+    public static String SRC_IP;
 
-    int SRC_PORT;
+    public static String SRC_PORT;
 
-    String DEST_IP;
+    public static String DEST_IP;
 
-    int DEST_PORT;
+    public static String DEST_PORT;
 
-    int LENGTH;
+    public static String LENGTH;
 
-    String PROTOCOL;
+    public static String PROTOCOL;
 
-    int CHECKSUM;
+    public static String CHECKSUM;
 
-    String FLAG1;
-    String FLAG2;
+    public static String FLAG_IP;
+
+    public static String FLAG_TCP;
+
+    public static String DATA_LENGTH;
 }
