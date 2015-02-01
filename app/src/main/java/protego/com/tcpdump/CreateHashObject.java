@@ -15,7 +15,7 @@ public class CreateHashObject {
 
 
 
-    public static void createObject(String checkBufferValue )
+    public static HashMap createObject(String checkBufferValue )
     {
 
         String[] splited = checkBufferValue.split("\\s+");
@@ -43,20 +43,20 @@ public class CreateHashObject {
         Log.d("Destination IP",Packet.DEST_IP);
 
 
-        HashMap<String,String> hash = new HashMap<>();
-        hash.put("TIMESTAMP",Packet.TIMESTAMP);
-        hash.put("FLAG_IP",Packet.FLAG_IP);
-        hash.put("PROTOCOL",Packet.PROTOCOL);
-        hash.put("LENGTH",Packet.LENGTH);
-        hash.put("SRC_IP",Packet.SRC_IP);
-        hash.put("DEST_IP",Packet.DEST_IP);
-        hash.put("SRC_PORT",Packet.SRC_PORT);
-        hash.put("DEST_PORT",Packet.DEST_PORT);
-        hash.put("FLAG_TCP",Packet.FLAG_TCP);
-        hash.put("CHECKSUM",Packet.CHECKSUM);
-        hash.put("DATA_LENGTH",Packet.DATA_LENGTH);
+        HashMap<Integer,String> hash = new HashMap<>();
+        hash.put(1,Packet.TIMESTAMP);
+        hash.put(2,Packet.FLAG_IP);
+        hash.put(3,Packet.PROTOCOL);
+        hash.put(4,Packet.LENGTH);
+        hash.put(5,Packet.SRC_IP);
+        hash.put(6,Packet.DEST_IP);
+        hash.put(7,Packet.SRC_PORT);
+        hash.put(8,Packet.DEST_PORT);
+        hash.put(9,Packet.FLAG_TCP);
+        hash.put(10,Packet.CHECKSUM);
+        hash.put(11,Packet.DATA_LENGTH);
 
-
+ return hash;
 
     }
 

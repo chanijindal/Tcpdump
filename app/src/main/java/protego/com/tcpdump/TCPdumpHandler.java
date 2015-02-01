@@ -29,7 +29,7 @@ public class TCPdumpHandler {
 
 
     private static final int defaultRefreshRate = 100;
-    private static final int defaultBufferSize = 77;
+    private static final int defaultBufferSize = 80;
 
     // Your Main activity's ids for the View.
 
@@ -57,7 +57,7 @@ public class TCPdumpHandler {
     private TextView outputText = null;
     private View scroller = null;
     private ProgressBar pbar = null;
-    private EditText params = null;
+   // private EditText params = null;
     boolean textSet= false;
     String checkBufferValue;
 StringBuilder result = new StringBuilder();
@@ -85,7 +85,7 @@ StringBuilder result = new StringBuilder();
                         outputText.append(new String(buffer));
                         checkBufferValue= new String(buffer);
                         CreateHashObject.createObject(checkBufferValue);
-
+                        Log.e("LOG",checkBufferValue);
                     result.append(new String(buffer));
 
 
