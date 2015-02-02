@@ -5,6 +5,7 @@ package protego.com.tcpdump;
  */
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import android.app.Activity;
@@ -59,6 +60,7 @@ public class TCPdumpHandler {
     private ProgressBar pbar = null;
    // private EditText params = null;
     boolean textSet= false;
+    public static HashMap<Integer,String> hash = new HashMap<>();
     String checkBufferValue;
 StringBuilder result = new StringBuilder();
     /**
@@ -84,7 +86,7 @@ StringBuilder result = new StringBuilder();
 
                         outputText.append(new String(buffer));
                         checkBufferValue= new String(buffer);
-                        CreateHashObject.createObject(checkBufferValue);
+                       hash =CreateHashObject.createObject(checkBufferValue);
                         Log.e("LOG",checkBufferValue);
                     result.append(new String(buffer));
 
